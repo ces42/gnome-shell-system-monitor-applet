@@ -1586,7 +1586,7 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
             max_frequency = Math.max(max_frequency, f);
 
             if (++i >= num_cpus) {
-                that.freq = Math.round(total_frequency / num_cpus / 1e6).toFixed(1);
+                that.freq = (total_frequency / num_cpus / 1e6).toFixed(1);
                 that.max_freq = (max_frequency / 1e6).toFixed(1);
             } else {
                 file = Gio.file_new_for_path(`/sys/devices/system/cpu/cpu${i}/cpufreq/scaling_cur_freq`);
@@ -2189,8 +2189,8 @@ const Fan = class SystemMonitor_Fan extends ElementBase {
 }
 
 const Power = class SystemMonitor_Power extends ElementBase {
-    constructor() {
-        super({
+    constructor(extension) {
+        super(extension, {
             elt: 'power',
             item_name: _('Power'),
             color_name: ['power0']
@@ -2198,17 +2198,17 @@ const Power = class SystemMonitor_Power extends ElementBase {
         this.power = 0;
         this.display_error = true;
         this.tip_format(_('W'));
-        // Schema.connect('changed::' + this.elt + '-sensor-file', this.refresh.bind(this));
+        // extension._Schema.connect('changed::' + this.elt + '-sensor-file', this.refresh.bind(this));
         this.update();
     }
     refresh() {
-        //let sfile = Schema.get_string(this.elt + '-sensor-file');
+        // let sfile = Schema.get_string(this.elt + '-sensor-file');
         let sfile = '/sys/class/power_supply/BAT1/power_now';
         if (GLib.file_test(sfile, GLib.FileTest.EXISTS)) {
             let file = Gio.file_new_for_path(sfile);
             file.load_contents_async(null, (source, result) => {
                 let as_r = source.load_contents_finish(result)
-                this.rpm = parseInt(parse_bytearray(as_r[1]))/1000_000;
+                this.power = parseInt(parse_bytearray(as_r[1]))/1.e6;
             });
         } else if (this.display_error) {
             console.error('error reading: ' + sfile);
@@ -2489,7 +2489,7 @@ export default class SystemMonitorExtension extends Extension {
             positionList[this._Schema.get_int('gpu-position')] = new Gpu(this);
             positionList[this._Schema.get_int('thermal-position')] = new Thermal(this);
             positionList[this._Schema.get_int('fan-position')] = new Fan(this);
-            // positionList[this._Schema.get_int('power-position')] = new Power(this);
+            positionList[this._Schema.get_int('power-position')] = new Power(this);
             // See TODO inside Battery
             // positionList[this._Schema.get_int('battery-position')] = new Battery(this);
 
