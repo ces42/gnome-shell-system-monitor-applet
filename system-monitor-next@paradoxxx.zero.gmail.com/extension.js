@@ -18,7 +18,7 @@
 
 // Author: Florian Mounier aka paradoxxxzero
 
-import { Extension, gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js";
+import { Extension, gettext } from "resource:///org/gnome/shell/extensions/extension.js";
 
 import Clutter from "gi://Clutter";
 import GLib from "gi://GLib";
@@ -41,6 +41,18 @@ import * as PanelMenu from "resource:///org/gnome/shell/ui/panelMenu.js";
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js";
 
 import * as Util from "resource:///org/gnome/shell/misc/util.js";
+
+function _(s) {
+    if (s.startsWith('KiB')) {
+        return 'KB' + s.substr(3);
+    } else if (s.startsWith('MiB')) {
+        return 'MB' + s.substr(3);
+    } else if (s.startsWith('GiB')) {
+        return 'GB' + s.substr(3);
+    } else {
+        return s;
+    }
+}
 
 const NetworkManager = NM;
 const UPower = UPowerGlib;
