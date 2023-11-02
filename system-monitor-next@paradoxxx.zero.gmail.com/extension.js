@@ -1388,7 +1388,7 @@ const Cpu = class SystemMonitor_Cpu extends ElementBase {
                 style_class: this.extension._Style.get('sm-status-value'),
                 y_align: Clutter.ActorAlign.CENTER}),
             new St.Label({
-                text: '%', style_class: this.extension._Style.get('sm-perc-label'),
+                text: '', style_class: this.extension._Style.get('sm-perc-label'),
                 y_align: Clutter.ActorAlign.CENTER})
         ];
     }
@@ -1398,7 +1398,7 @@ const Cpu = class SystemMonitor_Cpu extends ElementBase {
                 text: '',
                 style_class: this.extension._Style.get('sm-value')}),
             new St.Label({
-                text: '%',
+                text: '',
                 style_class: this.extension._Style.get('sm-label')})
         ];
     }
@@ -1608,7 +1608,7 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
                 style_class: this.extension._Style.get('sm-big-status-value'),
                 y_align: Clutter.ActorAlign.CENTER}),
             new St.Label({
-                text: 'GHz', style_class: this.extension._Style.get('sm-perc-label'),
+                text: '', style_class: this.extension._Style.get('sm-perc-label'),
                 y_align: Clutter.ActorAlign.CENTER})
         ];
     }
@@ -1618,7 +1618,7 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
                 text: '',
                 style_class: this.extension._Style.get('sm-value')}),
             new St.Label({
-                text: 'GHz',
+                text: '',
                 style_class: this.extension._Style.get('sm-label')})
         ];
     }
@@ -2117,7 +2117,7 @@ const Thermal = class SystemMonitor_Thermal extends ElementBase {
         return temperature.toString();
     }
     temperature_symbol() {
-        return this.fahrenheit_unit ? '°F' : '°C';
+        return this.fahrenheit_unit ? '°F' : '';
     }
 }
 
