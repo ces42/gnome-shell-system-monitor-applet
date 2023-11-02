@@ -1556,21 +1556,26 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
             color_name: ['freq']
         });
         this.freq = 0;
-        this.tip_format('MHz');
+        this.max_freq = 0;
+        this.tip_format('GHz');
         this.update();
     }
     refresh() {
         let total_frequency = 0;
+        let max_frequency = 0;
         let num_cpus = GTop.glibtop_get_sysinfo().ncpu;
         let i = 0;
         let file = Gio.file_new_for_path(`/sys/devices/system/cpu/cpu${i}/cpufreq/scaling_cur_freq`);
         let that = this;
         file.load_contents_async(null, function cb(source, result) {
             let as_r = source.load_contents_finish(result);
-            total_frequency += parseInt(parse_bytearray(as_r[1]));
+            let f = parseInt(parse_bytearray(as_r[1]));
+            total_frequency += f
+            max_frequency = Math.max(max_frequency, f);
 
             if (++i >= num_cpus) {
-                that.freq = Math.round(total_frequency / num_cpus / 1000);
+                that.freq = Math.round(total_frequency / num_cpus / 1e6).toFixed(1);
+                that.max_freq = (max_frequency / 1e6).toFixed(1);
             } else {
                 file = Gio.file_new_for_path(`/sys/devices/system/cpu/cpu${i}/cpufreq/scaling_cur_freq`);
                 file.load_contents_async(null, cb.bind(that));
@@ -1578,8 +1583,8 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
         });
     }
     _apply() {
-        let value = this.freq.toString();
-        this.text_items[0].text = value + ' ';
+        let value = this.freq.toString() + '/' + this.max_freq.toString();
+        this.text_items[0].text = value;
         this.vals[0] = value;
         this.tip_vals[0] = value;
         if (this.extension._Style.get('') !== '-compact') {
@@ -1603,7 +1608,7 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
                 style_class: this.extension._Style.get('sm-big-status-value'),
                 y_align: Clutter.ActorAlign.CENTER}),
             new St.Label({
-                text: 'MHz', style_class: this.extension._Style.get('sm-perc-label'),
+                text: 'GHz', style_class: this.extension._Style.get('sm-perc-label'),
                 y_align: Clutter.ActorAlign.CENTER})
         ];
     }
@@ -1613,7 +1618,7 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
                 text: '',
                 style_class: this.extension._Style.get('sm-value')}),
             new St.Label({
-                text: 'MHz',
+                text: 'GHz',
                 style_class: this.extension._Style.get('sm-label')})
         ];
     }
