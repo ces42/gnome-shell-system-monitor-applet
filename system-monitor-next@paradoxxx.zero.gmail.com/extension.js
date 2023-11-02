@@ -2489,6 +2489,7 @@ export default class SystemMonitorExtension extends Extension {
             positionList[this._Schema.get_int('gpu-position')] = new Gpu(this);
             positionList[this._Schema.get_int('thermal-position')] = new Thermal(this);
             positionList[this._Schema.get_int('fan-position')] = new Fan(this);
+            // positionList[this._Schema.get_int('power-position')] = new Power(this);
             // See TODO inside Battery
             // positionList[this._Schema.get_int('battery-position')] = new Battery(this);
 
