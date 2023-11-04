@@ -1569,12 +1569,14 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
         });
         this.freq = 0;
         this.max_freq = 0;
+        // this.min_freq = 0;
         this.tip_format('GHz');
         this.update();
     }
     refresh() {
         let total_frequency = 0;
         let max_frequency = 0;
+        // let min_frequency = 999e6;
         let num_cpus = GTop.glibtop_get_sysinfo().ncpu;
         let i = 0;
         let file = Gio.file_new_for_path(`/sys/devices/system/cpu/cpu${i}/cpufreq/scaling_cur_freq`);
@@ -1582,12 +1584,14 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
         file.load_contents_async(null, function cb(source, result) {
             let as_r = source.load_contents_finish(result);
             let f = parseInt(parse_bytearray(as_r[1]));
-            total_frequency += f
+            total_frequency += f;
             max_frequency = Math.max(max_frequency, f);
+            // min_frequency = Math.min(min_frequency, f);
 
             if (++i >= num_cpus) {
                 that.freq = (total_frequency / num_cpus / 1e6).toFixed(1);
                 that.max_freq = (max_frequency / 1e6).toFixed(1);
+                // that.min_freq = (min_frequency / 1e6).toFixed(1);
             } else {
                 file = Gio.file_new_for_path(`/sys/devices/system/cpu/cpu${i}/cpufreq/scaling_cur_freq`);
                 file.load_contents_async(null, cb.bind(that));
@@ -1908,8 +1912,9 @@ const Net = class SystemMonitor_Net extends ElementBase {
         const IconSize = this.extension._IconSize;
         return [
             new St.Icon({
-                icon_size: 2 * IconSize / 3 * Style.iconsize(),
-                icon_name: 'go-down-symbolic'}),
+                // icon_size: 2 * IconSize / 3 * Style.iconsize(),
+                icon_size: 18,
+                icon_name: 'network-receive-symbolic'}),
             new St.Label({
                 text: '',
                 style_class: Style.get('sm-net-value'),
@@ -1919,8 +1924,9 @@ const Net = class SystemMonitor_Net extends ElementBase {
                 style_class: Style.get('sm-net-unit-label'),
                 y_align: Clutter.ActorAlign.CENTER}),
             new St.Icon({
-                icon_size: 2 * IconSize / 3 * Style.iconsize(),
-                icon_name: 'go-up-symbolic'}),
+                // icon_size: 2 * IconSize / 3 * Style.iconsize(),
+                icon_size: 18,
+                icon_name: 'network-transmit-symbolic'}),
             new St.Label({
                 text: '',
                 style_class: Style.get('sm-net-value'),
