@@ -276,6 +276,7 @@ const SMWidgetPosPrefsListBox = GObject.registerClass({
             'thermal',
             'fan',
             'battery',
+            'power',
         ];
 
         widgetTypes.forEach(widgetType => {
@@ -617,6 +618,40 @@ const SMExpanderRow = GObject.registerClass({
                 this.add_row(item);
                 break;
             }
+            case 'power': {
+                let powerColors = [
+                    'power-power0-color',
+                ];
+
+                this._addColorsItem(powerColors);
+
+                let [_slist, _strlist] = check_sensors('power');
+                let stringListModel = new Gtk.StringList();
+
+                if (_slist.length === 0)
+                    stringListModel.append(_('Please install lm-sensors'));
+                else if (_slist.length === 1)
+                    this._settings.set_string('power-sensor-file', _slist[0]);
+
+                _strlist.forEach(str => {
+                    stringListModel.append(str);
+                });
+
+                let item = new Adw.ComboRow({title: _('Sensor:')});
+                item.set_model(stringListModel);
+
+                try {
+                    item.set_selected(_slist.indexOf(this._settings.get_string('power-sensor-file')));
+                } catch (e) {
+                    item.set_selected(0);
+                }
+
+                item.connect('notify::selected', widget => {
+                    this._settings.set_string('power-sensor-file', _slist[widget.selected]);
+                });
+                this.add_row(item);
+                break;
+            }
             case 'battery': {
                 let batteryColors = [
                     'battery-batt0-color',
@@ -684,6 +719,7 @@ const SMWidgetPrefsPage = GObject.registerClass({
             'thermal',
             'fan',
             'battery',
+            'power',
         ];
 
         widgetNames.forEach(widgetName => {
