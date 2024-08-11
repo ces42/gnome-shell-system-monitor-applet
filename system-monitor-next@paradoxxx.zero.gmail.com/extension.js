@@ -2156,6 +2156,63 @@ const Fan = class SystemMonitor_Fan extends ElementBase {
     }
 }
 
+const Power = class SystemMonitor_Power extends ElementBase {
+    constructor(extension) {
+        super(extension, {
+            elt: 'power',
+            item_name: _('Power'),
+            color_name: ['power0']
+        });
+        this.power = 0;
+        this.display_error = true;
+        this.tip_format(_('W'));
+        // extension._Schema.connect('changed::' + this.elt + '-sensor-label', this.refresh.bind(this));
+        this.update();
+    }
+    refresh() {
+        // let label = this.extension._Schema.get_string(this.elt + '-sensor-label');
+        // let sfile = this.sensors[label];
+        let sfile = '/sys/class/power_supply/BAT1/power_now';
+        if (GLib.file_test(sfile, GLib.FileTest.EXISTS)) {
+            let file = Gio.file_new_for_path(sfile);
+            file.load_contents_async(null, (source, result) => {
+                let as_r = source.load_contents_finish(result)
+                this.power = parseInt(parse_bytearray(as_r[1]))/1.e6;
+            });
+        } else if (this.display_error) {
+            console.error('error reading: ' + sfile);
+            this.display_error = false;
+        }
+    }
+    _apply() {
+        this.text_items[0].text = this.power.toFixed(1);
+        this.menu_items[0].text = this.power.toFixed(1);
+        this.vals = [Math.round(this.power*100)/100];
+        this.tip_vals[0] = this.power;
+    }
+    create_text_items() {
+        return [
+            new St.Label({
+                text: '',
+                style_class: this.extension._Style.get('sm-status-value'),
+                y_align: Clutter.ActorAlign.CENTER}),
+            new St.Label({
+                text: _('W'), style_class: this.extension._Style.get('sm-unit-label'),
+                y_align: Clutter.ActorAlign.CENTER})
+        ];
+    }
+    create_menu_items() {
+        return [
+            new St.Label({
+                text: '',
+                style_class: this.extension._Style.get('sm-value')}),
+            new St.Label({
+                text: _('W'),
+                style_class: this.extension._Style.get('sm-label')})
+        ];
+    }
+}
+
 const Gpu = class SystemMonitor_Gpu extends ElementBase {
     constructor(extension) {
         super(extension, {
@@ -2386,6 +2443,7 @@ export default class SystemMonitorExtension extends Extension {
         positionList[this._Schema.get_int('gpu-position')] = new Gpu(this);
         positionList[this._Schema.get_int('thermal-position')] = new Thermal(this);
         positionList[this._Schema.get_int('fan-position')] = new Fan(this);
+        positionList[this._Schema.get_int('power-position')] = new Power(this);
         // See TODO inside Battery
         // positionList[this._Schema.get_int('battery-position')] = new Battery(this);
 

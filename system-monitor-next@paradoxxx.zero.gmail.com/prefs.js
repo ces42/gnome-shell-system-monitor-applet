@@ -193,6 +193,7 @@ const SMWidgetPosPrefsListBox = GObject.registerClass({
             'gpu',
             'thermal',
             'fan',
+            'power',
             'battery',
         ];
 
@@ -535,6 +536,16 @@ const SMExpanderRow = GObject.registerClass({
                 this.add_row(item);
                 break;
             }
+            case 'power': {
+                let powerColors = [
+                    'power-power-color',
+                ];
+
+                this._addColorsItem(powerColors);
+
+                this.add_row(item);
+                break;
+            }
             case 'battery': {
                 let batteryColors = [
                     'battery-batt0-color',
@@ -601,6 +612,7 @@ const SMWidgetPrefsPage = GObject.registerClass({
             'gpu',
             'thermal',
             'fan',
+            'power',
             'battery',
         ];
 
