@@ -538,12 +538,11 @@ const SMExpanderRow = GObject.registerClass({
             }
             case 'power': {
                 let powerColors = [
-                    'power-power-color',
+                    'power-power0-color',
                 ];
 
                 this._addColorsItem(powerColors);
 
-                this.add_row(item);
                 break;
             }
             case 'battery': {
