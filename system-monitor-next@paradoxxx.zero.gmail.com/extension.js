@@ -1831,29 +1831,29 @@ const Net = class SystemMonitor_Net extends ElementBase {
                 this.tip_vals[2] = (this.tip_vals[2] / 1000000).toPrecision(3);
             }
         } else {
-            if (this.tip_vals[0] < 1024) {
+            if (this.tip_vals[0] < 1000) {
                 this.text_items[2].text = Style.netunits_kbytes();
                 this.menu_items[1].text = this.tip_unit_labels[0].text = _('KiB/s');
-            } else if (this.tip_vals[0] < 1048576) {
+            } else if (this.tip_vals[0] < 1000_000) {
                 this.text_items[2].text = Style.netunits_mbytes();
                 this.menu_items[1].text = this.tip_unit_labels[0].text = _('MiB/s');
-                this.tip_vals[0] = (this.tip_vals[0] / 1024).toPrecision(3);
+                this.tip_vals[0] = (this.tip_vals[0] / 1024).toPrecision(this.tip_vals[0] >= 1024 ? 3 : 2);
             } else {
                 this.text_items[2].text = Style.netunits_gbytes();
                 this.menu_items[1].text = this.tip_unit_labels[0].text = _('GiB/s');
-                this.tip_vals[0] = (this.tip_vals[0] / 1048576).toPrecision(3);
+                this.tip_vals[0] = (this.tip_vals[0] / 1048576).toPrecision(this.tip_vals[0] >= 1024*1024 ? 3 : 2);
             }
-            if (this.tip_vals[2] < 1024) {
+            if (this.tip_vals[2] < 1000) {
                 this.text_items[5].text = Style.netunits_kbytes();
                 this.menu_items[4].text = this.tip_unit_labels[2].text = _('KiB/s');
-            } else if (this.tip_vals[2] < 1048576) {
+            } else if (this.tip_vals[2] < 1000_000) {
                 this.text_items[5].text = Style.netunits_mbytes();
                 this.menu_items[4].text = this.tip_unit_labels[2].text = _('MiB/s');
-                this.tip_vals[2] = (this.tip_vals[2] / 1024).toPrecision(3);
+                this.tip_vals[2] = (this.tip_vals[2] / 1024).toPrecision(this.tip_vals[2] >= 1024 ? 3 : 2);
             } else {
                 this.text_items[5].text = Style.netunits_gbytes();
                 this.menu_items[4].text = this.tip_unit_labels[2].text = _('GiB/s');
-                this.tip_vals[2] = (this.tip_vals[2] / 1048576).toPrecision(3);
+                this.tip_vals[2] = (this.tip_vals[2] / 1048576).toPrecision(this.tip_vals[2] >= 1024*1024 ? 3 : 2);
             }
         }
 
