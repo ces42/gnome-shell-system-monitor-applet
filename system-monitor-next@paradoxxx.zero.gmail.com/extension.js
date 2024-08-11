@@ -1870,8 +1870,9 @@ const Net = class SystemMonitor_Net extends ElementBase {
         const IconSize = this.extension._IconSize;
         return [
             new St.Icon({
-                icon_size: 2 * IconSize / 3 * Style.iconsize(),
-                icon_name: 'go-down-symbolic'}),
+                // icon_size: 2 * IconSize / 3 * Style.iconsize(),
+                icon_size: 18,
+                icon_name: 'network-receive-symbolic'}),
             new St.Label({
                 text: '',
                 style_class: Style.get('sm-net-value'),
@@ -1881,8 +1882,9 @@ const Net = class SystemMonitor_Net extends ElementBase {
                 style_class: Style.get('sm-net-unit-label'),
                 y_align: Clutter.ActorAlign.CENTER}),
             new St.Icon({
-                icon_size: 2 * IconSize / 3 * Style.iconsize(),
-                icon_name: 'go-up-symbolic'}),
+                // icon_size: 2 * IconSize / 3 * Style.iconsize(),
+                icon_size: 18,
+                icon_name: 'network-transmit-symbolic'}),
             new St.Label({
                 text: '',
                 style_class: Style.get('sm-net-value'),
