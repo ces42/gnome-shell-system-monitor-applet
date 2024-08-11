@@ -1526,7 +1526,7 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
             color_name: ['freq']
         });
         this.freq = 0;
-        this.tip_format('MHz');
+        this.tip_format('GHz');
         this.update();
     }
     refresh() {
@@ -1540,7 +1540,7 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
             total_frequency += parseInt(parse_bytearray(as_r[1]));
 
             if (++i >= num_cpus) {
-                that.freq = Math.round(total_frequency / num_cpus / 1000);
+                that.freq = (total_frequency / num_cpus / 1e6).toFixed(1);
             } else {
                 file = Gio.file_new_for_path(`/sys/devices/system/cpu/cpu${i}/cpufreq/scaling_cur_freq`);
                 file.load_contents_async(null, cb.bind(that));
@@ -1573,7 +1573,7 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
                 style_class: this.extension._Style.get('sm-big-status-value'),
                 y_align: Clutter.ActorAlign.CENTER}),
             new St.Label({
-                text: 'MHz', style_class: this.extension._Style.get('sm-perc-label'),
+                text: 'GHz', style_class: this.extension._Style.get('sm-perc-label'),
                 y_align: Clutter.ActorAlign.CENTER})
         ];
     }
@@ -1583,7 +1583,7 @@ const Freq = class SystemMonitor_Freq extends ElementBase {
                 text: '',
                 style_class: this.extension._Style.get('sm-value')}),
             new St.Label({
-                text: 'MHz',
+                text: 'GHz',
                 style_class: this.extension._Style.get('sm-label')})
         ];
     }
